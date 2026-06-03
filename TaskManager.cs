@@ -1,49 +1,93 @@
 using System;
 
-// Common interface
-public interface ITaskDevice
+// Printer interface
+public interface IPrinter
 {
-    void Execute();
+    void Print();
 }
 
-// Printer implementation
-public class Printer : ITaskDevice
+// Scanner interface
+public interface IScanner
 {
-    public void Execute()
+    void Scan();
+}
+
+// Concrete Printer class
+public class Printer : IPrinter
+{
+    public void Print()
     {
         Console.WriteLine("Printing document...");
     }
 }
 
-// Scanner implementation
-public class Scanner : ITaskDevice
+// Concrete Scanner class
+public class Scanner : IScanner
 {
-    public void Execute()
+    public void Scan()
     {
         Console.WriteLine("Scanning document...");
     }
 }
 
-// Task Manager
-public class TaskManager
+// Combined device using composition
+public class PrintScanner : IPrinter, IScanner
 {
-    public void ExecuteTask(int taskId, ITaskDevice device)
+    private readonly IPrinter _printer;
+    private readonly IScanner _scanner;
+
+    public PrintScanner(IPrinter printer, IScanner scanner)
     {
-        Console.WriteLine($"Executing Task: {taskId}");
-        device.Execute();
+        _printer = printer;
+        _scanner = scanner;
+    }
+
+    public void Print()
+    {
+        _printer.Print();
+    }
+
+    public void Scan()
+    {
+        _scanner.Scan();
     }
 }
 
+// Task manager
+public class TaskManager
+{
+    public void PrintTask(int taskId, IPrinter printer)
+    {
+        Console.WriteLine($"Executing Print Task: {taskId}");
+        printer.Print();
+    }
+
+    public void ScanTask(int taskId, IScanner scanner)
+    {
+        Console.WriteLine($"Executing Scan Task: {taskId}");
+        scanner.Scan();
+    }
+}
+
+// Main program
 public class Program
 {
     public static void Main()
     {
-        var printer = new Printer();
-        var scanner = new Scanner();
+        IPrinter printer = new Printer();
+        IScanner scanner = new Scanner();
 
-        var scheduler = new TaskManager();
+        // Combined device
+        PrintScanner printScanner = new PrintScanner(printer, scanner);
 
-        scheduler.ExecuteTask(101, printer);
-        scheduler.ExecuteTask(102, scanner);
+        TaskManager manager = new TaskManager();
+
+        // Individual devices
+        manager.PrintTask(101, printer);
+        manager.ScanTask(102, scanner);
+
+        // Combined device
+        manager.PrintTask(103, printScanner);
+        manager.ScanTask(104, printScanner);
     }
 }
