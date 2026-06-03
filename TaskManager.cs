@@ -1,34 +1,36 @@
 using System;
 
-public class Printer
+// Common interface
+public interface ITaskDevice
 {
-    public void Print()
+    void Execute();
+}
+
+// Printer implementation
+public class Printer : ITaskDevice
+{
+    public void Execute()
     {
         Console.WriteLine("Printing document...");
     }
 }
 
-public class Scanner
+// Scanner implementation
+public class Scanner : ITaskDevice
 {
-    public void Scan()
+    public void Execute()
     {
         Console.WriteLine("Scanning document...");
     }
 }
 
+// Task Manager
 public class TaskManager
 {
-  
-    public void PrintTask(int taskId, Printer printer)
+    public void ExecuteTask(int taskId, ITaskDevice device)
     {
-        Console.WriteLine($"Executing Print Task: {taskId}");
-        printer.Print();
-    }
-
-    public void ScanTask(int taskId, Scanner scanner)
-    {
-        Console.WriteLine($"Executing Scan Task: {taskId}");
-        scanner.Scan();
+        Console.WriteLine($"Executing Task: {taskId}");
+        device.Execute();
     }
 }
 
@@ -41,7 +43,7 @@ public class Program
 
         var scheduler = new TaskManager();
 
-        scheduler.PrintTask(101, printer);
-        scheduler.ScanTask(102, scanner);
+        scheduler.ExecuteTask(101, printer);
+        scheduler.ExecuteTask(102, scanner);
     }
 }

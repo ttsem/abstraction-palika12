@@ -1,21 +1,22 @@
-class Printer:
-    def print(self):
+class TaskDevice:
+    def execute(self):
+        pass
+
+
+class Printer(TaskDevice):
+    def execute(self):
         print("Printing document...")
 
 
-class Scanner:
-    def scan(self):
+class Scanner(TaskDevice):
+    def execute(self):
         print("Scanning document...")
 
 
 class TaskManager:
-    def print_task(self, task_id, printer):
-        print(f"Executing Print Task: {task_id}")
-        printer.print()
-
-    def scan_task(self, task_id, scanner):
-        print(f"Executing Scan Task: {task_id}")
-        scanner.scan()
+    def execute_task(self, task_id, device: TaskDevice):
+        print(f"Executing Task: {task_id}")
+        device.execute()
 
 
 # Usage
@@ -24,5 +25,5 @@ scanner = Scanner()
 
 scheduler = TaskManager()
 
-scheduler.print_task(101, printer)
-scheduler.scan_task(102, scanner)
+scheduler.execute_task(101, printer)
+scheduler.execute_task(102, scanner)
